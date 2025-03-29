@@ -80,6 +80,7 @@
 #include "cli/command_sym_export_svg.h"
 #include "cli/command_sym_upgrade.h"
 #include "cli/command_version.h"
+#include "cli/command_bmptocmp.h"
 #include "cli/exit_codes.h"
 
 // Add this header after all others, to avoid a collision name in a Windows header
@@ -154,6 +155,7 @@ static CLI::SYM_EXPORT_COMMAND           symExportCmd{};
 static CLI::SYM_EXPORT_SVG_COMMAND       symExportSvgCmd{};
 static CLI::SYM_UPGRADE_COMMAND          symUpgradeCmd{};
 static CLI::VERSION_COMMAND              versionCmd{};
+static CLI::BMP_TO_CMP_COMMAND           bmpToCmpCmd{};
 
 
 // clang-format off
@@ -251,6 +253,9 @@ static std::vector<COMMAND_ENTRY> commandStack = {
     },
     {
             &versionCmd,
+    },
+    {
+            &bmpToCmpCmd,
     }
 };
 // clang-format on

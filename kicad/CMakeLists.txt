@@ -76,6 +76,7 @@ set( KICAD_CLI_SRCS
     cli/command_sym_export_svg.cpp
     cli/command_sym_upgrade.cpp
     cli/command_version.cpp
+    cli/command_bmptocmp.cpp
 
     jobs_runner.cpp
     )
