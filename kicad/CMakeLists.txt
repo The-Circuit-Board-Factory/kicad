@@ -13,6 +13,8 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/pcbnew
     ${CMAKE_SOURCE_DIR}/eeschema
     ${CMAKE_SOURCE_DIR}/kicad/pcm
+    ${CMAKE_SOURCE_DIR}/bitmap2component
+    ${CMAKE_SOURCE_DIR}/thirdparty/potrace/include
     ${INC_AFTER}
     )
 
@@ -188,6 +190,9 @@ endif()
 
 target_link_libraries( kicad pcm )
 target_link_libraries( kicad-cli pcm )
+
+set_target_properties(bitmap2component PROPERTIES ENABLE_EXPORTS ON)
+target_link_libraries( bitmap2component )
 
 install( TARGETS kicad
     DESTINATION ${KICAD_BIN}
