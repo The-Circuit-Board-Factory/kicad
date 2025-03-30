@@ -117,7 +117,13 @@ add_executable( kicad-cli WIN32
     ${KICAD_CLI_SRCS}
     ${KICAD_EXTRA_SRCS}
     ${KICAD_RESOURCES}
+    ${CMAKE_SOURCE_DIR}/bitmap2component/bitmap2cmp_control.cpp
+    # ${CMAKE_SOURCE_DIR}/bitmap2component/bitmap2cmp_main.cpp
+    ${CMAKE_SOURCE_DIR}/bitmap2component/bitmap2cmp_settings.cpp
     ${CMAKE_SOURCE_DIR}/bitmap2component/bitmap2component.cpp
+    ${CMAKE_SOURCE_DIR}/bitmap2component/bitmap2cmp_frame.cpp
+    ${CMAKE_SOURCE_DIR}/bitmap2component/bitmap2cmp_panel.cpp
+    ${CMAKE_SOURCE_DIR}/bitmap2component/bitmap2cmp_panel_base.cpp
     )
 
 if( MSVC )
