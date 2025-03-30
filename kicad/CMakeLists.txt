@@ -117,6 +117,7 @@ add_executable( kicad-cli WIN32
     ${KICAD_CLI_SRCS}
     ${KICAD_EXTRA_SRCS}
     ${KICAD_RESOURCES}
+    ${CMAKE_SOURCE_DIR}/bitmap2component/bitmap2component.cpp
     )
 
 if( MSVC )
@@ -168,6 +169,7 @@ if( APPLE )
         )
 else()
     target_link_libraries( kicad
+        potrace
         nlohmann_json
         common
         gal
@@ -178,6 +180,7 @@ else()
         )
 
     target_link_libraries( kicad-cli
+        potrace
         nlohmann_json
         common
         gal
