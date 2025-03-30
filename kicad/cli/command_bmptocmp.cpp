@@ -42,6 +42,7 @@
 #define ARG_DPI_Y "--dpi-y"
 #define ARG_OUTPUT_LAYER "--output-layer"
 #define ARG_OUTPUT "--output"
+#define ARG_NEGATE "--negative"
 
 #define DEFAULT_DPI 300
 
@@ -72,6 +73,10 @@ CLI::BMP_TO_CMP_COMMAND::BMP_TO_CMP_COMMAND() : COMMAND( "bmp2cmp" )
     m_argParser.add_argument( "--ol", ARG_OUTPUT_LAYER )
             .default_value( "F.SilkS" )
             .help( UTF8STDSTR( _( "The layer the resulting footprint is on" ) ) );
+
+    m_argParser.add_argument( "--ne", ARG_NEGATE )
+            .help( UTF8STDSTR( _( "Negative mode" ) ) )
+            .flag();
 }
 
 int CLI::BMP_TO_CMP_COMMAND::doPerform( KIWAY& aKiway )
@@ -184,6 +189,19 @@ int CLI::BMP_TO_CMP_COMMAND::doPerform( KIWAY& aKiway )
         }
     }
 
+    bool m_negative = m_argParser.get<bool>(ARG_NEGATE);
+    if( m_negative ) {
+        for( int y = 0; y < m_Greyscale_Image.GetHeight(); y++ )
+        {
+            for( int x = 0; x < m_Greyscale_Image.GetWidth(); x++ )
+            {
+                unsigned char pixel = m_Greyscale_Image.GetGreen( x, y );
+                pixel = ~pixel;
+                m_Greyscale_Image.SetRGB( x, y, pixel, pixel, pixel );
+            }
+        }
+    }
+
     m_Greyscale_Bitmap = wxBitmap( m_Greyscale_Image );
     m_NB_Image  = m_Greyscale_Image;
 
@@ -249,7 +267,10 @@ int CLI::BMP_TO_CMP_COMMAND::doPerform( KIWAY& aKiway )
 
     wxFprintf(stdout, _("Outputting footprint\n"));
 
-    converter.ConvertBitmap( potrace_bitmap, aFormat, a_Dpi_X, a_Dpi_Y, aLayer );
+    m_outputSizeX.SetOutputSize(102.4, EDA_UNITS::MM);
+    m_outputSizeY.SetOutputSize(102.4, EDA_UNITS::MM);
+    //converter.ConvertBitmap( potrace_bitmap, aFormat, a_Dpi_X, a_Dpi_Y, aLayer );
+    converter.ConvertBitmap( potrace_bitmap, aFormat, m_outputSizeX.GetOutputDPI(), m_outputSizeY.GetOutputDPI(), aLayer );
 
     if( reporter.HasMessage() ) {
         wxFprintf(stderr, _( reporter.GetMessages() ) );
