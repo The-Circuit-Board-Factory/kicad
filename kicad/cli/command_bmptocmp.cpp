@@ -70,7 +70,7 @@ CLI::BMP_TO_CMP_COMMAND::BMP_TO_CMP_COMMAND() : COMMAND( "bmp2cmp" )
             .default_value(DEFAULT_DPI);
 
     m_argParser.add_argument( "--ol", ARG_OUTPUT_LAYER )
-            .default_value( "F.Silkscreen" )
+            .default_value( "F.SilkS" )
             .help( UTF8STDSTR( _( "The layer the resulting footprint is on" ) ) );
 }
 
@@ -118,6 +118,7 @@ int CLI::BMP_TO_CMP_COMMAND::doPerform( KIWAY& aKiway )
     if( !m_Pict_Image.LoadFile(m_argInput))
     {
         // LoadFile has its own UI, no need for further failure notification here
+        wxFprintf( stderr, _( "failed to load file\n" ) );
         return false;
     }
 
@@ -182,6 +183,35 @@ int CLI::BMP_TO_CMP_COMMAND::doPerform( KIWAY& aKiway )
             }
         }
     }
+
+    m_Greyscale_Bitmap = wxBitmap( m_Greyscale_Image );
+    m_NB_Image  = m_Greyscale_Image;
+
+    // binarize
+    double aThreshold = 0.5;
+
+    unsigned char threshold = aThreshold * 255;
+    unsigned char alpha_thresh = 0.7 * threshold;
+
+    for( int y = 0; y < m_Greyscale_Image.GetHeight(); y++ )
+    {
+        for( int x = 0; x < m_Greyscale_Image.GetWidth(); x++ )
+        {
+            unsigned char pixel = m_Greyscale_Image.GetGreen( x, y );
+            unsigned char alpha = m_Greyscale_Image.HasAlpha() ? m_Greyscale_Image.GetAlpha( x, y )
+                                                               : wxALPHA_OPAQUE;
+
+            if( pixel < threshold && alpha > alpha_thresh )
+                pixel = 0;
+            else
+                pixel = 255;
+
+            m_NB_Image.SetRGB( x, y, pixel, pixel, pixel );
+        }
+    }
+
+    m_BN_Bitmap = wxBitmap( m_NB_Image );
+
 
     const wxString outputFile = From_UTF8(m_argParser.get<std::string>(ARG_OUTPUT).c_str());
     FILE* outfile = wxFopen( outputFile, wxT( "w" ) );
