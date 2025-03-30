@@ -43,6 +43,8 @@
 #define ARG_OUTPUT_LAYER "--output-layer"
 #define ARG_OUTPUT "--output"
 
+#define DEFAULT_DPI 300
+
 CLI::BMP_TO_CMP_COMMAND::BMP_TO_CMP_COMMAND() : COMMAND( "bmp2cmp" )
 {
     m_argParser.add_description( UTF8STDSTR( _( "Convert bitmap images to component footprints" ) ) );
@@ -60,15 +62,15 @@ CLI::BMP_TO_CMP_COMMAND::BMP_TO_CMP_COMMAND() : COMMAND( "bmp2cmp" )
     m_argParser.add_argument( "--dx", ARG_DPI_X )
             .help( UTF8STDSTR( _( "The X DPI of the image" ) ) )
             .scan<'i', int>()
-            .default_value(300);
+            .default_value(DEFAULT_DPI);
 
     m_argParser.add_argument( "--dy", ARG_DPI_Y )
             .help( UTF8STDSTR( _( "The Y DPI of the image" ) ) )
             .scan<'i', int>()
-            .default_value(300);
+            .default_value(DEFAULT_DPI);
 
     m_argParser.add_argument( "--ol", ARG_OUTPUT_LAYER )
-            .default_value( std::string() )
+            .default_value( "F.Silkscreen" )
             .help( UTF8STDSTR( _( "The layer the resulting footprint is on" ) ) );
 }
 
@@ -100,8 +102,101 @@ int CLI::BMP_TO_CMP_COMMAND::doPerform( KIWAY& aKiway )
     int a_Dpi_Y = m_argParser.get<int>(ARG_DPI_Y);
     const wxString aLayer = From_UTF8(m_argParser.get<std::string>(ARG_OUTPUT_LAYER).c_str());
 
-    // potrace_bitmap_t* potrace_bitmap = bm_new( m_NB_Image.GetWidth(), m_NB_Image.GetHeight() );
-    potrace_bitmap_t* potrace_bitmap = bm_new( 102.4, 102.4 );
+    // convert image
+    wxImage           m_Pict_Image;
+    wxBitmap          m_Pict_Bitmap;
+    wxImage           m_Greyscale_Image;
+    wxBitmap          m_Greyscale_Bitmap;
+    wxImage           m_NB_Image;
+    wxBitmap          m_BN_Bitmap;
+    IMAGE_SIZE        m_outputSizeX;
+    IMAGE_SIZE        m_outputSizeY;
+    double            m_aspectRatio;
+
+    m_Pict_Image.Destroy();
+
+    if( !m_Pict_Image.LoadFile(m_argInput))
+    {
+        // LoadFile has its own UI, no need for further failure notification here
+        return false;
+    }
+
+    m_Pict_Bitmap = wxBitmap( m_Pict_Image );
+
+    // Determine image resolution in DPI (does not existing in all formats).
+    // the resolution can be given in bit per inches or bit per cm in file
+
+    int imageDPIx = m_Pict_Image.GetOptionInt( wxIMAGE_OPTION_RESOLUTIONX );
+    int imageDPIy = m_Pict_Image.GetOptionInt( wxIMAGE_OPTION_RESOLUTIONY );
+
+    if( imageDPIx > 1 && imageDPIy > 1 )
+    {
+        if( m_Pict_Image.GetOptionInt( wxIMAGE_OPTION_RESOLUTIONUNIT ) == wxIMAGE_RESOLUTION_CM )
+        {
+            imageDPIx = KiROUND( imageDPIx * 2.54 );
+            imageDPIy = KiROUND( imageDPIy * 2.54 );
+        }
+    }
+    else    // fallback to a default value (DEFAULT_DPI)
+    {
+        imageDPIx = imageDPIy = DEFAULT_DPI;
+    }
+
+//    m_InputXValueDPI->SetLabel( wxString::Format( wxT( "%d" ), imageDPIx ) );
+//    m_InputYValueDPI->SetLabel( wxString::Format( wxT( "%d" ), imageDPIy ) );
+//
+    int h  = m_Pict_Bitmap.GetHeight();
+    int w  = m_Pict_Bitmap.GetWidth();
+    m_aspectRatio = (double) w / h;
+
+    m_outputSizeX.SetOriginalDPI( imageDPIx );
+    m_outputSizeX.SetOriginalSizePixels( w );
+    m_outputSizeY.SetOriginalDPI( imageDPIy );
+    m_outputSizeY.SetOriginalSizePixels( h );
+
+    // Update display to keep aspect ratio
+    //wxCommandEvent dummy;
+    //OnSizeChangeX( dummy );
+
+    //updateImageInfo();
+
+    //m_GreyscalePicturePanel->SetVirtualSize( w, h );
+    //m_InitialPicturePanel->SetVirtualSize( w, h );
+    //m_BNPicturePanel->SetVirtualSize( w, h );
+
+    m_Greyscale_Image.Destroy();
+    m_Greyscale_Image = m_Pict_Image.ConvertToGreyscale( );
+
+    if( m_Pict_Bitmap.GetMask() )
+    {
+        for( int x = 0; x < m_Pict_Bitmap.GetWidth(); x++ )
+        {
+            for( int y = 0; y < m_Pict_Bitmap.GetHeight(); y++ )
+            {
+                if( m_Pict_Image.GetRed( x, y ) == m_Pict_Image.GetMaskRed()
+                        && m_Pict_Image.GetGreen( x, y ) == m_Pict_Image.GetMaskGreen()
+                        && m_Pict_Image.GetBlue( x, y ) == m_Pict_Image.GetMaskBlue() )
+                {
+                    m_Greyscale_Image.SetRGB( x, y, 255, 255, 255 );
+                }
+            }
+        }
+    }
+
+    const wxString outputFile = From_UTF8(m_argParser.get<std::string>(ARG_OUTPUT).c_str());
+    FILE* outfile = wxFopen( outputFile, wxT( "w" ) );
+
+    if( !outfile )
+    {
+        // wxMessageBox( wxString::Format( _( "File '%s' could not be created." ), m_outFileName ) );
+        wxFprintf( stderr,  wxString::Format( _( "File '%s' could not be created." ), outputFile ));
+        return 1;
+    }
+
+    std::string buffer;
+
+
+    potrace_bitmap_t* potrace_bitmap = bm_new( m_NB_Image.GetWidth(), m_NB_Image.GetHeight() );
     if( !potrace_bitmap )
     {
         // TODO error message
@@ -109,7 +204,6 @@ int CLI::BMP_TO_CMP_COMMAND::doPerform( KIWAY& aKiway )
         return 1;
     }
 
-#if 0
     /* fill the bitmap with data */
     for( int y = 0; y < m_NB_Image.GetHeight(); y++ )
     {
@@ -119,17 +213,24 @@ int CLI::BMP_TO_CMP_COMMAND::doPerform( KIWAY& aKiway )
             BM_PUT( potrace_bitmap, x, y, pixel ? 0 : 1 );
         }
     }
-#endif
 
     WX_STRING_REPORTER reporter;
-    std::string aData = m_argParser.get<std::string>(ARG_OUTPUT);
-    BITMAPCONV_INFO    converter( aData, reporter );
+    BITMAPCONV_INFO    converter( buffer, reporter );
+
+    wxFprintf(stdout, _("Outputting footprint\n"));
 
     converter.ConvertBitmap( potrace_bitmap, aFormat, a_Dpi_X, a_Dpi_Y, aLayer );
 
     if( reporter.HasMessage() ) {
-
+        wxFprintf(stderr, _( reporter.GetMessages() ) );
     }
+
+
+    fputs( buffer.c_str(), outfile );
+    fclose( outfile );
+
+
+
 
     return 0;
 }
