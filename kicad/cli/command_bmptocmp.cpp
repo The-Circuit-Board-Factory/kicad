@@ -38,11 +38,12 @@
 //#include <bitmap_io.h>
 
 #define ARG_OUTPUT_FORMAT "--output-format"
-#define ARG_DPI_X "--dpi-x"
-#define ARG_DPI_Y "--dpi-y"
+#define ARG_SIZE_X "--size-x"
+#define ARG_SIZE_Y "--size-y"
 #define ARG_OUTPUT_LAYER "--output-layer"
 #define ARG_OUTPUT "--output"
 #define ARG_NEGATE "--negative"
+#define ARG_THRESHOLD "--threshold"
 
 #define DEFAULT_DPI 300
 
@@ -60,14 +61,14 @@ CLI::BMP_TO_CMP_COMMAND::BMP_TO_CMP_COMMAND() : COMMAND( "bmp2cmp" )
             .default_value( std::string() )
             .help( UTF8STDSTR( _( "The format to output the bitmap to" ) ) );
 
-    m_argParser.add_argument( "--dx", ARG_DPI_X )
-            .help( UTF8STDSTR( _( "The X DPI of the image" ) ) )
-            .scan<'i', int>()
+    m_argParser.add_argument( "--sx", ARG_SIZE_X )
+            .help( UTF8STDSTR( _( "The width of the image" ) ) )
+            .scan<'f', double>()
             .default_value(DEFAULT_DPI);
 
-    m_argParser.add_argument( "--dy", ARG_DPI_Y )
-            .help( UTF8STDSTR( _( "The Y DPI of the image" ) ) )
-            .scan<'i', int>()
+    m_argParser.add_argument( "--sy", ARG_SIZE_Y )
+            .help( UTF8STDSTR( _( "The height of the image" ) ) )
+            .scan<'f', double>()
             .default_value(DEFAULT_DPI);
 
     m_argParser.add_argument( "--ol", ARG_OUTPUT_LAYER )
@@ -77,6 +78,11 @@ CLI::BMP_TO_CMP_COMMAND::BMP_TO_CMP_COMMAND() : COMMAND( "bmp2cmp" )
     m_argParser.add_argument( "--ne", ARG_NEGATE )
             .help( UTF8STDSTR( _( "Negative mode" ) ) )
             .flag();
+
+    m_argParser.add_argument( "--th", ARG_THRESHOLD )
+            .help( UTF8STDSTR( _( "Threshold" ) ) )
+            .scan<'f', double>()
+            .default_value(0.5);
 }
 
 int CLI::BMP_TO_CMP_COMMAND::doPerform( KIWAY& aKiway )
@@ -103,8 +109,6 @@ int CLI::BMP_TO_CMP_COMMAND::doPerform( KIWAY& aKiway )
         }
     }
     */
-    int a_Dpi_X = m_argParser.get<int>(ARG_DPI_X);
-    int a_Dpi_Y = m_argParser.get<int>(ARG_DPI_Y);
     const wxString aLayer = From_UTF8(m_argParser.get<std::string>(ARG_OUTPUT_LAYER).c_str());
 
     // convert image
@@ -206,7 +210,7 @@ int CLI::BMP_TO_CMP_COMMAND::doPerform( KIWAY& aKiway )
     m_NB_Image  = m_Greyscale_Image;
 
     // binarize
-    double aThreshold = 0.5;
+    double aThreshold = m_argParser.get<double>(ARG_THRESHOLD);
 
     unsigned char threshold = aThreshold * 255;
     unsigned char alpha_thresh = 0.7 * threshold;
@@ -267,8 +271,10 @@ int CLI::BMP_TO_CMP_COMMAND::doPerform( KIWAY& aKiway )
 
     wxFprintf(stdout, _("Outputting footprint\n"));
 
-    m_outputSizeX.SetOutputSize(102.4, EDA_UNITS::MM);
-    m_outputSizeY.SetOutputSize(102.4, EDA_UNITS::MM);
+    double size_x = m_argParser.get<double>(ARG_SIZE_X);
+    double size_y = m_argParser.get<double>(ARG_SIZE_Y);
+    m_outputSizeX.SetOutputSize(size_x, EDA_UNITS::MM);
+    m_outputSizeY.SetOutputSize(size_y, EDA_UNITS::MM);
     //converter.ConvertBitmap( potrace_bitmap, aFormat, a_Dpi_X, a_Dpi_Y, aLayer );
     converter.ConvertBitmap( potrace_bitmap, aFormat, m_outputSizeX.GetOutputDPI(), m_outputSizeY.GetOutputDPI(), aLayer );
 
