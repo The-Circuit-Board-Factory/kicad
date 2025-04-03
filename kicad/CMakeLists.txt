@@ -4,6 +4,8 @@ if( COMPILER_SUPPORTS_WARNINGS )
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${WARN_FLAGS_C}")
 endif()
 
+string( APPEND CMAKE_CXX_FLAGS_RELEASE "-Os" )
+
 add_compile_definitions( KICAD )
 add_subdirectory( pcm )
 
@@ -52,32 +54,32 @@ set( KICAD_SRCS
 
 set( KICAD_CLI_SRCS
     cli/command.cpp
-    cli/command_jobset_run.cpp
+    # cli/command_jobset_run.cpp
     cli/command_pcb_export_base.cpp
     cli/command_pcb_drc.cpp
-    cli/command_pcb_render.cpp
-    cli/command_pcb_export_3d.cpp
+    # cli/command_pcb_render.cpp
+    # cli/command_pcb_export_3d.cpp
     cli/command_pcb_export_drill.cpp
     cli/command_pcb_export_dxf.cpp
     cli/command_pcb_export_gerber.cpp
     cli/command_pcb_export_gerbers.cpp
-    cli/command_pcb_export_gencad.cpp
-    cli/command_pcb_export_ipc2581.cpp
-    cli/command_pcb_export_ipcd356.cpp
-    cli/command_pcb_export_odb.cpp
-    cli/command_pcb_export_pdf.cpp
+    # cli/command_pcb_export_gencad.cpp
+    # cli/command_pcb_export_ipc2581.cpp
+    # cli/command_pcb_export_ipcd356.cpp
+    # cli/command_pcb_export_odb.cpp
+    # cli/command_pcb_export_pdf.cpp
     cli/command_pcb_export_pos.cpp
     cli/command_pcb_export_svg.cpp
-    cli/command_fp_export_svg.cpp
-    cli/command_fp_upgrade.cpp
-    cli/command_sch_export_bom.cpp
-    cli/command_sch_export_pythonbom.cpp
-    cli/command_sch_export_netlist.cpp
-    cli/command_sch_export_plot.cpp
-    cli/command_sch_erc.cpp
-    cli/command_sym_export_svg.cpp
-    cli/command_sym_upgrade.cpp
-    cli/command_version.cpp
+    # cli/command_fp_export_svg.cpp
+    # cli/command_fp_upgrade.cpp
+    # cli/command_sch_export_bom.cpp
+    # cli/command_sch_export_pythonbom.cpp
+    # cli/command_sch_export_netlist.cpp
+    # cli/command_sch_export_plot.cpp
+    # cli/command_sch_erc.cpp
+    # cli/command_sym_export_svg.cpp
+    # cli/command_sym_upgrade.cpp
+    # cli/command_version.cpp
     cli/command_bmptocmp.cpp
 
     jobs_runner.cpp
