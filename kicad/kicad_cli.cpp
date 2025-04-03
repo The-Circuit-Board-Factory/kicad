@@ -46,40 +46,40 @@
 #include <kiplatform/environment.h>
 #include <locale_io.h>
 
-#include "cli/command_jobset.h"
-#include "cli/command_jobset_run.h"
+// #include "cli/command_jobset.h"
+// #include "cli/command_jobset_run.h"
 #include "cli/command_pcb.h"
 #include "cli/command_pcb_export.h"
 #include "cli/command_pcb_drc.h"
 #include "cli/command_pcb_render.h"
-#include "cli/command_pcb_export_3d.h"
+// #include "cli/command_pcb_export_3d.h"
 #include "cli/command_pcb_export_drill.h"
 #include "cli/command_pcb_export_dxf.h"
 #include "cli/command_pcb_export_gerber.h"
 #include "cli/command_pcb_export_gerbers.h"
-#include "cli/command_pcb_export_gencad.h"
-#include "cli/command_pcb_export_ipc2581.h"
-#include "cli/command_pcb_export_ipcd356.h"
-#include "cli/command_pcb_export_odb.h"
-#include "cli/command_pcb_export_pdf.h"
+// #include "cli/command_pcb_export_gencad.h"
+// #include "cli/command_pcb_export_ipc2581.h"
+// #include "cli/command_pcb_export_ipcd356.h"
+// #include "cli/command_pcb_export_odb.h"
+// #include "cli/command_pcb_export_pdf.h"
 #include "cli/command_pcb_export_pos.h"
 #include "cli/command_pcb_export_svg.h"
-#include "cli/command_sch_export_bom.h"
-#include "cli/command_sch_export_pythonbom.h"
-#include "cli/command_sch_export_netlist.h"
-#include "cli/command_sch_export_plot.h"
-#include "cli/command_fp.h"
-#include "cli/command_fp_export.h"
-#include "cli/command_fp_export_svg.h"
-#include "cli/command_fp_upgrade.h"
-#include "cli/command_sch.h"
-#include "cli/command_sch_erc.h"
-#include "cli/command_sch_export.h"
-#include "cli/command_sym.h"
-#include "cli/command_sym_export.h"
-#include "cli/command_sym_export_svg.h"
-#include "cli/command_sym_upgrade.h"
-#include "cli/command_version.h"
+// #include "cli/command_sch_export_bom.h"
+// #include "cli/command_sch_export_pythonbom.h"
+// #include "cli/command_sch_export_netlist.h"
+// #include "cli/command_sch_export_plot.h"
+// #include "cli/command_fp.h"
+// #include "cli/command_fp_export.h"
+// #include "cli/command_fp_export_svg.h"
+// #include "cli/command_fp_upgrade.h"
+// #include "cli/command_sch.h"
+// #include "cli/command_sch_erc.h"
+// #include "cli/command_sch_export.h"
+// #include "cli/command_sym.h"
+// #include "cli/command_sym_export.h"
+// #include "cli/command_sym_export_svg.h"
+// #include "cli/command_sym_upgrade.h"
+// #include "cli/command_version.h"
 #include "cli/command_bmptocmp.h"
 #include "cli/exit_codes.h"
 
@@ -111,30 +111,31 @@ struct COMMAND_ENTRY
             handler( aHandler ), subCommands( aSub ){};
 };
 
-static CLI::JOBSET_COMMAND               jobsetCmd{};
-static CLI::JOBSET_RUN_COMMAND           jobsetRunCmd{};
+// static CLI::JOBSET_COMMAND               jobsetCmd{};
+// static CLI::JOBSET_RUN_COMMAND           jobsetRunCmd{};
 static CLI::PCB_COMMAND                  pcbCmd{};
 static CLI::PCB_DRC_COMMAND              pcbDrcCmd{};
-static CLI::PCB_RENDER_COMMAND           pcbRenderCmd{};
+// static CLI::PCB_RENDER_COMMAND           pcbRenderCmd{};
 static CLI::PCB_EXPORT_DRILL_COMMAND     exportPcbDrillCmd{};
 static CLI::PCB_EXPORT_DXF_COMMAND       exportPcbDxfCmd{};
-static CLI::PCB_EXPORT_3D_COMMAND        exportPcbGlbCmd{ "glb", UTF8STDSTR( _( "Export GLB (binary GLTF)" ) ), JOB_EXPORT_PCB_3D::FORMAT::GLB };
-static CLI::PCB_EXPORT_3D_COMMAND        exportPcbStepCmd{ "step", UTF8STDSTR( _( "Export STEP" ) ), JOB_EXPORT_PCB_3D::FORMAT::STEP };
-static CLI::PCB_EXPORT_3D_COMMAND        exportPcbBrepCmd{ "brep", UTF8STDSTR( _( "Export BREP" ) ), JOB_EXPORT_PCB_3D::FORMAT::BREP };
-static CLI::PCB_EXPORT_3D_COMMAND        exportPcbXaoCmd{ "xao", UTF8STDSTR( _( "Export XAO" ) ), JOB_EXPORT_PCB_3D::FORMAT::XAO };
-static CLI::PCB_EXPORT_3D_COMMAND        exportPcbVrmlCmd{ "vrml", UTF8STDSTR( _( "Export VRML" ) ), JOB_EXPORT_PCB_3D::FORMAT::VRML };
-static CLI::PCB_EXPORT_3D_COMMAND        exportPcbPlyCmd{ "ply", UTF8STDSTR( _( "Export PLY" ) ), JOB_EXPORT_PCB_3D::FORMAT::PLY };
-static CLI::PCB_EXPORT_3D_COMMAND        exportPcbStlCmd{ "stl", UTF8STDSTR( _( "Export STL" ) ), JOB_EXPORT_PCB_3D::FORMAT::STL };
+// static CLI::PCB_EXPORT_3D_COMMAND        exportPcbGlbCmd{ "glb", UTF8STDSTR( _( "Export GLB (binary GLTF)" ) ), JOB_EXPORT_PCB_3D::FORMAT::GLB };
+// static CLI::PCB_EXPORT_3D_COMMAND        exportPcbStepCmd{ "step", UTF8STDSTR( _( "Export STEP" ) ), JOB_EXPORT_PCB_3D::FORMAT::STEP };
+// static CLI::PCB_EXPORT_3D_COMMAND        exportPcbBrepCmd{ "brep", UTF8STDSTR( _( "Export BREP" ) ), JOB_EXPORT_PCB_3D::FORMAT::BREP };
+// static CLI::PCB_EXPORT_3D_COMMAND        exportPcbXaoCmd{ "xao", UTF8STDSTR( _( "Export XAO" ) ), JOB_EXPORT_PCB_3D::FORMAT::XAO };
+// static CLI::PCB_EXPORT_3D_COMMAND        exportPcbVrmlCmd{ "vrml", UTF8STDSTR( _( "Export VRML" ) ), JOB_EXPORT_PCB_3D::FORMAT::VRML };
+// static CLI::PCB_EXPORT_3D_COMMAND        exportPcbPlyCmd{ "ply", UTF8STDSTR( _( "Export PLY" ) ), JOB_EXPORT_PCB_3D::FORMAT::PLY };
+// static CLI::PCB_EXPORT_3D_COMMAND        exportPcbStlCmd{ "stl", UTF8STDSTR( _( "Export STL" ) ), JOB_EXPORT_PCB_3D::FORMAT::STL };
 static CLI::PCB_EXPORT_SVG_COMMAND       exportPcbSvgCmd{};
-static CLI::PCB_EXPORT_PDF_COMMAND       exportPcbPdfCmd{};
+// static CLI::PCB_EXPORT_PDF_COMMAND       exportPcbPdfCmd{};
 static CLI::PCB_EXPORT_POS_COMMAND       exportPcbPosCmd{};
 static CLI::PCB_EXPORT_GERBER_COMMAND    exportPcbGerberCmd{};
 static CLI::PCB_EXPORT_GERBERS_COMMAND   exportPcbGerbersCmd{};
-static CLI::PCB_EXPORT_GENCAD_COMMAND    exportPcbGencadCmd{};
-static CLI::PCB_EXPORT_IPC2581_COMMAND   exportPcbIpc2581Cmd{};
-static CLI::PCB_EXPORT_IPCD356_COMMAND   exportPcbIpcD356Cmd{};
-static CLI::PCB_EXPORT_ODB_COMMAND       exportPcbOdbCmd{};
+// static CLI::PCB_EXPORT_GENCAD_COMMAND    exportPcbGencadCmd{};
+// static CLI::PCB_EXPORT_IPC2581_COMMAND   exportPcbIpc2581Cmd{};
+// static CLI::PCB_EXPORT_IPCD356_COMMAND   exportPcbIpcD356Cmd{};
+// static CLI::PCB_EXPORT_ODB_COMMAND       exportPcbOdbCmd{};
 static CLI::PCB_EXPORT_COMMAND           exportPcbCmd{};
+#if 0
 static CLI::SCH_EXPORT_COMMAND           exportSchCmd{};
 static CLI::SCH_COMMAND                  schCmd{};
 static CLI::SCH_ERC_COMMAND              schErcCmd{};
@@ -155,11 +156,13 @@ static CLI::SYM_EXPORT_COMMAND           symExportCmd{};
 static CLI::SYM_EXPORT_SVG_COMMAND       symExportSvgCmd{};
 static CLI::SYM_UPGRADE_COMMAND          symUpgradeCmd{};
 static CLI::VERSION_COMMAND              versionCmd{};
+#endif
 static CLI::BMP_TO_CMP_COMMAND           bmpToCmpCmd{};
 
 
 // clang-format off
 static std::vector<COMMAND_ENTRY> commandStack = {
+#if 0
     {
         &jobsetCmd,
         {
@@ -182,78 +185,79 @@ static std::vector<COMMAND_ENTRY> commandStack = {
             }
         }
     },
+#endif
     {
         &pcbCmd,
         {
             {
                 &pcbDrcCmd
             },
-            {
-                &pcbRenderCmd
-            },
+            // {
+            //     &pcbRenderCmd
+            // },
             {
                 &exportPcbCmd,
                 {
-                    &exportPcbBrepCmd,
+                    // &exportPcbBrepCmd,
                     &exportPcbDrillCmd,
                     &exportPcbDxfCmd,
                     &exportPcbGerberCmd,
                     &exportPcbGerbersCmd,
-                    &exportPcbGencadCmd,
-                    &exportPcbGlbCmd,
-                    &exportPcbIpc2581Cmd,
-                    &exportPcbIpcD356Cmd,
-                    &exportPcbOdbCmd,
-                    &exportPcbPdfCmd,
+                    // &exportPcbGencadCmd,
+                    // &exportPcbGlbCmd,
+                    // &exportPcbIpc2581Cmd,
+                    // &exportPcbIpcD356Cmd,
+                    // &exportPcbOdbCmd,
+                    // &exportPcbPdfCmd,
                     &exportPcbPosCmd,
-                    &exportPcbStepCmd,
+                    // &exportPcbStepCmd,
                     &exportPcbSvgCmd,
-                    &exportPcbVrmlCmd,
-                    &exportPcbXaoCmd,
-                    &exportPcbPlyCmd,
-                    &exportPcbStlCmd
+                    // &exportPcbVrmlCmd,
+                    // &exportPcbXaoCmd,
+                    // &exportPcbPlyCmd,
+                    // &exportPcbStlCmd
                 }
             }
         }
     },
-    {
-        &schCmd,
-        {
-            {
-                &schErcCmd
-            },
-            {
-                &exportSchCmd,
-                {
-                    &exportSchDxfCmd,
-                    &exportSchHpglCmd,
-                    &exportSchNetlistCmd,
-                    &exportSchPdfCmd,
-                    &exportSchPostscriptCmd,
-                    &exportSchBomCmd,
-                    &exportSchPythonBomCmd,
-                    &exportSchSvgCmd
-                }
-            }
-        }
-    },
-    {
-        &symCmd,
-        {
-            {
-                &symExportCmd,
-                {
-                    &symExportSvgCmd
-                }
-            },
-            {
-                &symUpgradeCmd
-            }
-        }
-    },
-    {
-            &versionCmd,
-    },
+    // {
+    //     &schCmd,
+    //     {
+    //         {
+    //             &schErcCmd
+    //         },
+    //         {
+    //             &exportSchCmd,
+    //             {
+    //                 &exportSchDxfCmd,
+    //                 &exportSchHpglCmd,
+    //                 &exportSchNetlistCmd,
+    //                 &exportSchPdfCmd,
+    //                 &exportSchPostscriptCmd,
+    //                 &exportSchBomCmd,
+    //                 &exportSchPythonBomCmd,
+    //                 &exportSchSvgCmd
+    //             }
+    //         }
+    //     }
+    // },
+    // {
+    //     &symCmd,
+    //     {
+    //         {
+    //             &symExportCmd,
+    //             {
+    //                 &symExportSvgCmd
+    //             }
+    //         },
+    //         {
+    //             &symUpgradeCmd
+    //         }
+    //     }
+    // },
+    // {
+    //         &versionCmd,
+    // },
     {
             &bmpToCmpCmd,
     }
@@ -400,7 +404,9 @@ int PGM_KICAD::OnPgmRun()
     // the version arg gets redirected to the version subcommand
     if( argParser[ARG_VERSION] == true )
     {
+#if 0
         cliCmd = &versionCmd;
+#endif
     }
 
     if( !cliCmd )
